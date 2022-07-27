@@ -56,13 +56,24 @@ namespace gr {
         d_dual_basis(dual_basis),
         d_num_frames_received(0),
         d_num_frames_decoded(0),
-        d_num_subframes_decoded(0)
+        d_num_subframes_decoded(0),
+        d_num_fillframes_decoded(0)
     {
       message_port_register_out(pmt::mp("out"));
 
       for (uint8_t i=0; i<SYNC_WORD_LEN; i++) {
           d_sync_word = (d_sync_word << 8) | (SYNC_WORD[i] & 0xff);
       }
+
+      /*
+      // Create an alternative sync word that corresponds to a 90 deg
+      //  constellation rotation. Others covered by differential encoding.
+      //d_alt_sync_word = reverse_and_invert(d_sync_word, 2, 0x02);
+      d_alt_sync_word = reverse_and_invert(d_sync_word, 2, 0x02, 32);
+      if (d_verbose) printf("\tNormal sync word:\t%Zd\n", static_cast<uint64_t>(d_sync_word));
+      if (d_verbose) printf("\tFormed an alternate sync word:\t%zd\n", static_cast<uint64_t>(d_alt_sync_word));
+      d_alt_sync_state = false;
+      */
 
       enter_sync_search();
     }
@@ -87,7 +98,15 @@ namespace gr {
                   if (compare_sync_word()) {
                       if (d_verbose) printf("\tsync word detected\n");
                       d_num_frames_received++;
+                      d_alt_sync_state = false;
                       enter_codeword();
+                  /*
+                  } else if (compare_alt_sync_word()) {
+                      if (d_verbose) printf("\talternate sync word detected %zd\n", static_cast<uint64_t>(reverse_and_invert(d_data_reg, 2, 0x02, 32)));
+                      d_num_frames_received++;
+                      d_alt_sync_state = true;
+                      enter_codeword();
+                  */
                   }
                   break;
               case STATE_CODEWORD:
@@ -95,6 +114,11 @@ namespace gr {
                   d_data_reg = (d_data_reg << 1) | (in[count++] & 0x01);
                   d_bit_counter++;
                   if (d_bit_counter == 8) {
+                      /*
+                      if (d_alt_sync_state) {
+                          d_data_reg = reverse_and_invert(d_data_reg, 2, 0x02, 8) & 0xFF;
+                      }
+                      */
                       d_codeword[d_byte_counter] = d_data_reg;
                       d_byte_counter++;
                       d_bit_counter = 0;
@@ -106,15 +130,24 @@ namespace gr {
 
                       bool success = decode_frame();
                       if (success) {
-                          pmt::pmt_t pdu(pmt::cons(pmt::PMT_NIL, pmt::make_blob(d_payload, data_len())));
-                          message_port_pub(pmt::mp("out"), pdu);
+                          //if (is_fill_frame()) {
+                          if (is_fill_frame_fast()) {
+                              // detect and drop fill frames
+                              d_num_fillframes_decoded++;
+
+                              //return 0;
+                          } else {
+                              pmt::pmt_t pdu(pmt::cons(pmt::PMT_NIL, pmt::make_blob(d_payload, DATA_LEN)));
+                              message_port_pub(pmt::mp("out"), pdu);
+                          }
                       }
 
                       if (d_verbose) {
-                          printf("\tframes received: %i\n\tframes decoded: %i\n\tsubframes decoded: %i\n",
+                          printf("\tframes received: %i\n\tframes decoded: %i\n\tsubframes decoded: %i\n\tfillframes decoded: %i\n",
                                   d_num_frames_received,
                                   d_num_frames_decoded,
-                                  d_num_subframes_decoded);
+                                  d_num_subframes_decoded,
+                                  d_num_fillframes_decoded);
                       }
                       enter_sync_search();
                   }
@@ -143,6 +176,14 @@ namespace gr {
     {
         uint32_t nwrong = 0;
         uint32_t wrong_bits = d_data_reg ^ d_sync_word;
+        volk_32u_popcnt(&nwrong, wrong_bits);
+        return nwrong <= d_threshold;
+    }
+
+    bool ccsds_decoder_impl::compare_alt_sync_word()
+    {
+        uint32_t nwrong = 0;
+        uint32_t wrong_bits = d_data_reg ^ d_alt_sync_word;
         volk_32u_popcnt(&nwrong, wrong_bits);
         return nwrong <= d_threshold;
     }
@@ -191,6 +232,72 @@ namespace gr {
         if (success) d_num_frames_decoded++;
 
         return success;
+    }
+
+    bool ccsds_decoder_impl::is_fill_frame()
+    {
+        uint16_t sum = 0;
+
+        for (size_t i=0; i < DATA_LEN; i++) {
+            sum += d_payload[i];
+        }
+
+        return (sum == 0);
+    }
+
+    bool ccsds_decoder_impl::is_fill_frame_fast()
+    {
+        return ((d_payload[0] == 0) && (d_payload[1] == 0));
+    }
+
+    uint8_t ccsds_decoder_impl::reverse(uint8_t x, uint8_t n)
+    {
+        // Bit-reverse every n bits
+        uint8_t result = 0;
+        for (uint8_t i=0; i<n; i++) {
+            if ((x >> i) & 1)
+                result |= 1 << (n - 1 - i);
+        }
+
+        return result;
+    }
+
+    uint8_t ccsds_decoder_impl::invert(uint8_t x, uint8_t mask)
+    {
+        // Invert the masked bits
+        return x ^ mask;
+    }
+
+    uint32_t ccsds_decoder_impl::reverse_and_invert(uint32_t x, uint8_t n, uint8_t mask, uint8_t length)
+    {
+        uint32_t temp = 0;
+        uint32_t result = 0;
+        uint8_t sym = 0;
+
+        for (uint8_t i=0; i<(length/n); i++) {
+            sym = invert(reverse((x >> ((length-n) - n*i)) & 0x3, n), 0x02); // -Q I
+            //sym = reverse((x >> ((length-n) - n*i)) & 0x3, n); // Q I
+            //sym = invert((x >> ((length-n) - n*i)) & 0x3, 0x02); // Q -I
+
+            //sym = reverse((x >> (30 - 2*i)) & 0x3, 2);
+            //sym = invert(reverse((x >> (30 - 2*i)) & 0x3, 2), 0x01);
+            temp = (temp << n) | (sym & 0xFF);
+        }
+        result = temp;
+
+/*
+        for (uint8_t i=(32/2); i>0; --i) {
+            sym = invert(reverse((x >> (2*i)) & 0x3, 2), 0x02);
+            temp = (temp >> 2) | (sym & 0xFF);
+        }
+        result = temp;
+*/
+        //for (uint8_t i=0; i<(32/2); i++) {
+        //    sym = (temp >> (2*i)) & 0x3;
+        //    result = (result << 2) | (sym & 0xFF);
+        //}
+
+        return result;
     }
   } /* namespace ccsds */
 } /* namespace gr */

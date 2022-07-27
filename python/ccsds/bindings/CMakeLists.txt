@@ -32,6 +32,7 @@ list(APPEND ccsds_python_files
     ccsds_decoder_python.cc
     ccsds_encoder_python.cc
     correlator_python.cc
+    insert_idle_frame_python.cc
     python_bindings.cc)
 
 GR_PYBIND_MAKE_OOT(ccsds

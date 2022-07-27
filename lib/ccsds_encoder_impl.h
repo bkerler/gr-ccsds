@@ -35,10 +35,14 @@ namespace gr {
          bool d_rs_encode;
          bool d_interleave;
          bool d_scramble;
+         bool d_idle;
+         float d_idle_block_time;
+         bool d_asm_tail;
          bool d_printing;
          bool d_verbose;
          int  d_n_interleave;
          bool d_dual_basis;
+         bool d_started;
 
          uint32_t d_num_frames;
 
@@ -47,6 +51,8 @@ namespace gr {
          size_t d_curr_len;
 
          struct ccsds_tx_pkt d_pkt;
+         struct ccsds_tx_first_pkt d_first_pkt;
+         struct ccsds_tx_asm_tail_pkt d_asm_tail_pkt;
          reed_solomon d_rs;
 
          void copy_stream_tags();
@@ -61,10 +67,13 @@ namespace gr {
       int calculate_output_stream_length(const gr_vector_int &ninput_items);
 
      public:
-      ccsds_encoder_impl(size_t itemsize, const std::string& len_tag_key, bool rs_encode, bool interleave, bool scramble, bool printing, bool verbose, int n_interleave, bool dual_basis);
+      ccsds_encoder_impl(size_t itemsize, const std::string& len_tag_key, bool rs_encode, bool interleave, bool scramble, bool idle, float idle_block_time, bool asm_tail, bool printing, bool verbose, int n_interleave, bool dual_basis);
       ~ccsds_encoder_impl();
 
       uint32_t num_frames() const {return d_num_frames;}
+
+      void set_idle(bool idle);
+      void set_idle_block_time(float idle_block_time);
 
       // Where all the action really happens
       int work(int noutput_items,
@@ -77,4 +86,3 @@ namespace gr {
 } // namespace gr
 
 #endif /* INCLUDED_CCSDS_CCSDS_ENCODER_IMPL_H */
-

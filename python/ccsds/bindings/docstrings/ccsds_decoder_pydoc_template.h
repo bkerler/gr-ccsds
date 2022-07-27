@@ -7,7 +7,7 @@
  *
  */
 #include "pydoc_macros.h"
-#define D(...) DOC(gr,ccsds, __VA_ARGS__ )
+#define D(...) DOC(gr, ccsds, __VA_ARGS__)
 /*
   This file contains placeholders for docstrings for the Python bindings.
   Do not edit! These were automatically extracted during the binding process
@@ -15,25 +15,25 @@
  */
 
 
- 
- static const char *__doc_gr_ccsds_ccsds_decoder = R"doc()doc";
+static const char* __doc_gr_ccsds_ccsds_decoder = R"doc()doc";
 
 
- static const char *__doc_gr_ccsds_ccsds_decoder_ccsds_decoder_0 = R"doc()doc";
+static const char* __doc_gr_ccsds_ccsds_decoder_ccsds_decoder_0 = R"doc()doc";
 
 
- static const char *__doc_gr_ccsds_ccsds_decoder_ccsds_decoder_1 = R"doc()doc";
+static const char* __doc_gr_ccsds_ccsds_decoder_ccsds_decoder_1 = R"doc()doc";
 
 
- static const char *__doc_gr_ccsds_ccsds_decoder_make = R"doc()doc";
+static const char* __doc_gr_ccsds_ccsds_decoder_make = R"doc()doc";
 
 
- static const char *__doc_gr_ccsds_ccsds_decoder_num_frames_received = R"doc()doc";
+static const char* __doc_gr_ccsds_ccsds_decoder_num_frames_received = R"doc()doc";
 
 
- static const char *__doc_gr_ccsds_ccsds_decoder_num_frames_decoded = R"doc()doc";
+static const char* __doc_gr_ccsds_ccsds_decoder_num_frames_decoded = R"doc()doc";
 
 
- static const char *__doc_gr_ccsds_ccsds_decoder_num_subframes_decoded = R"doc()doc";
+static const char* __doc_gr_ccsds_ccsds_decoder_num_subframes_decoded = R"doc()doc";
 
-  
+
+static const char* __doc_gr_ccsds_ccsds_decoder_num_fillframes_decoded = R"doc()doc";

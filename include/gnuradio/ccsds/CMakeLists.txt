@@ -14,5 +14,6 @@ install(FILES
     ccsds_encoder.h
     ccsds_decoder.h
     correlator.h
+    insert_idle_frame.h
     DESTINATION include/gnuradio/ccsds
 )

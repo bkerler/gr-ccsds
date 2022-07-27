@@ -10,5 +10,8 @@ install(FILES
     ccsds_ccsds_encoder.block.yml
     ccsds_ccsds_decoder.block.yml
     ccsds_correlator.block.yml
+    ccsds_insert_idle_frame.block.yml
+    ccsds_encapsulate_net.block.yml
+    ccsds_decapsulate_net.block.yml
     DESTINATION share/gnuradio/grc/blocks
 )
