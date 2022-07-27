@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(insert_idle_frame.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(0e7afc6ac0a9ea03924f8d35edbe2884)                     */
+/* BINDTOOL_HEADER_FILE_HASH(5d858a331094d14e4f210388cc85ee59)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

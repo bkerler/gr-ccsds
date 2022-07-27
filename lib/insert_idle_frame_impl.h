@@ -21,7 +21,7 @@
 #ifndef INCLUDED_CCSDS_INSERT_IDLE_FRAME_IMPL_H
 #define INCLUDED_CCSDS_INSERT_IDLE_FRAME_IMPL_H
 
-#include <ccsds/insert_idle_frame.h>
+#include <gnuradio/ccsds/insert_idle_frame.h>
 
 namespace gr {
   namespace ccsds {

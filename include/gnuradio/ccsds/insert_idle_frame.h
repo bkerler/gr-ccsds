@@ -36,7 +36,7 @@ namespace gr {
     class CCSDS_API insert_idle_frame : virtual public gr::block
     {
      public:
-      typedef boost::shared_ptr<insert_idle_frame> sptr;
+      typedef std::shared_ptr<insert_idle_frame> sptr;
 
       /*!
        * \brief Return a shared_ptr to a new instance of ccsds::insert_idle_frame.

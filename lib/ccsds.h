@@ -50,12 +50,12 @@ struct ccsds_tx_pkt {
 
 struct ccsds_tx_first_pkt {
     uint8_t sync_word[SYNC_WORD_LEN];
-    uint8_t codeword[CODEWORD_LEN];
+    uint8_t codeword[CODEWORD_MAX_LEN];
     uint8_t post_sync_word[SYNC_WORD_LEN];
 }__attribute__((packed));
 
 struct ccsds_tx_asm_tail_pkt {
-    uint8_t codeword[CODEWORD_LEN];
+    uint8_t codeword[CODEWORD_MAX_LEN];
     uint8_t sync_word[SYNC_WORD_LEN];
 }__attribute__((packed));
 

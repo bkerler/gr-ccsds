@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(ccsds_encoder.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(28ed1f27cf883c161e32223149443016)                     */
+/* BINDTOOL_HEADER_FILE_HASH(18d20c929f90af3b5021a2a0e8190a3b)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -50,6 +50,8 @@ void bind_ccsds_encoder(py::module& m)
              py::arg("asm_tail") = false,
              py::arg("printing") = false,
              py::arg("verbose") = false,
+             py::arg("n_interleave") = 5,
+             py::arg("dual_basis") = true,
              D(ccsds_encoder, make))
 
 

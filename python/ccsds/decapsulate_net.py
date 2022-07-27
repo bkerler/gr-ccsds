@@ -49,11 +49,11 @@ class decapsulate_net(gr.basic_block):
     def handle_msg(self, msg_pmt):
         msg = pmt.cdr(msg_pmt)
         if not pmt.is_u8vector(msg):
-            print "[ERROR] Received invalid message type. Expected u8vector"
+            print("[ERROR] Received invalid message type. Expected u8vector")
             return
 
         if pmt.length(msg) > self.mtu:
-            print "[ERROR] Received frame is too long (%d bytes).  Cannot exceed %d bytes." % (pmt.length(msg), self.mtu)
+            print("[ERROR] Received frame is too long (%d bytes).  Cannot exceed %d bytes." % (pmt.length(msg), self.mtu))
             return
 
         #print pmt.u8vector_elements(msg)[0:2]
@@ -75,6 +75,6 @@ class decapsulate_net(gr.basic_block):
         buff = array.array('B', buff)
 
         if debug:
-            print "Received a packet of length %d bytes" % length
+            print("Received a packet of length %d bytes" % length)
 
         self.message_port_pub(pmt.intern('out'), pmt.cons(pmt.PMT_NIL, pmt.init_u8vector(len(buff), buff)))

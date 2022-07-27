@@ -107,7 +107,7 @@ namespace gr {
                 if (d_idle) {
                   // return an IDLE frame
                   d_curr_meta = pmt::make_dict();
-                  d_curr_vec = pmt::make_u8vector(DATA_LEN, 0x00);
+                  d_curr_vec = pmt::make_u8vector(data_len(), 0x00);
                   d_curr_len = pmt::length(d_curr_vec);
 
                   if (d_verbose) {
@@ -116,7 +116,7 @@ namespace gr {
                 } else {
                   return 0;
                 }
-                return TOTAL_FRAME_LEN;
+                return total_frame_len();
             }
             if (!pmt::is_pair(msg)) {
                 throw std::runtime_error("received a malformed pdu message");
@@ -181,7 +181,7 @@ namespace gr {
               // data into output array
               if (d_interleave) {
                   for (uint8_t j=0; j<RS_BLOCK_LEN; j++)
-                      d_first_pkt.codeword[i + (RS_NBLOCKS*j)] = rs_block[j];
+                      d_first_pkt.codeword[i + (RS_MAX_NBLOCKS*j)] = rs_block[j];
               } else {
                   memcpy(&d_first_pkt.codeword[i*RS_BLOCK_LEN], rs_block, RS_BLOCK_LEN);
               }
@@ -189,7 +189,7 @@ namespace gr {
               // data into output array
               if (d_interleave) {
                   for (uint8_t j=0; j<RS_BLOCK_LEN; j++)
-                      d_asm_tail_pkt.codeword[i + (RS_NBLOCKS*j)] = rs_block[j];
+                      d_asm_tail_pkt.codeword[i + (RS_MAX_NBLOCKS*j)] = rs_block[j];
               } else {
                   memcpy(&d_asm_tail_pkt.codeword[i*RS_BLOCK_LEN], rs_block, RS_BLOCK_LEN);
               }
@@ -197,7 +197,7 @@ namespace gr {
               // data into output array
               if (d_interleave) {
                   for (uint8_t j=0; j<RS_BLOCK_LEN; j++)
-                      d_pkt.codeword[i + (RS_NBLOCKS*j)] = rs_block[j];
+                      d_pkt.codeword[i + (RS_MAX_NBLOCKS*j)] = rs_block[j];
               } else {
                   memcpy(&d_pkt.codeword[i*RS_BLOCK_LEN], rs_block, RS_BLOCK_LEN);
               }
