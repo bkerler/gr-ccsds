@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2016 André Løfaldli.
+ * Copyright 2017 <+YOU OR YOUR COMPANY+>.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,44 +19,42 @@
  */
 
 
-#ifndef INCLUDED_CCSDS_CCSDS_ENCODER_H
-#define INCLUDED_CCSDS_CCSDS_ENCODER_H
+#ifndef INCLUDED_CCSDS_INSERT_IDLE_FRAME_H
+#define INCLUDED_CCSDS_INSERT_IDLE_FRAME_H
 
 #include <gnuradio/ccsds/api.h>
-#include <gnuradio/tagged_stream_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace ccsds {
 
     /*!
-     * \brief Create Reed Solomon Encoded CCSDS frames
+     * \brief <+description of block+>
      * \ingroup ccsds
      *
-     * Description of the block
-     *
      */
-    class CCSDS_API ccsds_encoder : virtual public gr::tagged_stream_block
+    class CCSDS_API insert_idle_frame : virtual public gr::block
     {
      public:
-      typedef std::shared_ptr<ccsds_encoder> sptr;
+      typedef boost::shared_ptr<insert_idle_frame> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of ccsds::ccsds_encoder.
+       * \brief Return a shared_ptr to a new instance of ccsds::insert_idle_frame.
        *
+       * To avoid accidental use of raw pointers, ccsds::insert_idle_frame's
+       * constructor is in a private implementation
+       * class. ccsds::insert_idle_frame::make is the public interface for
+       * creating new instances.
        */
-      static sptr make(size_t itemsize=0, const std::string& len_tag_key="packet_len", bool rs_encode=true, bool interleave=true, bool scramble=true, bool idle=true, float idle_block_time=50, bool asm_tail=false, bool printing=false, bool verbose=false);
-
-      virtual void set_idle(bool idle) = 0;
-      virtual void set_idle_block_time(float idle_block_time) = 0;
+      static sptr make(const std::vector<gr_complex> &modulated_vector);
 
       /*!
-       * \brief return the number of frames sent
-       *
+       * \brief return number of fill frames added
        */
-      virtual uint32_t num_frames() const = 0;
+      virtual uint32_t num_fillframes_added() const = 0;
     };
 
   } // namespace ccsds
 } // namespace gr
 
-#endif /* INCLUDED_CCSDS_CCSDS_ENCODER_H */
+#endif /* INCLUDED_CCSDS_INSERT_IDLE_FRAME_H */

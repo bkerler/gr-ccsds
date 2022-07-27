@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(ccsds_encoder.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(9d7df0e4206f192e5e24ce5f4311fac0)                     */
+/* BINDTOOL_HEADER_FILE_HASH(28ed1f27cf883c161e32223149443016)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -30,45 +30,42 @@ namespace py = pybind11;
 void bind_ccsds_encoder(py::module& m)
 {
 
-    using ccsds_encoder    = ::gr::ccsds::ccsds_encoder;
+    using ccsds_encoder = ::gr::ccsds::ccsds_encoder;
 
 
-    py::class_<ccsds_encoder, gr::tagged_stream_block, gr::block, gr::basic_block,
-        std::shared_ptr<ccsds_encoder>>(m, "ccsds_encoder", D(ccsds_encoder))
+    py::class_<ccsds_encoder,
+               gr::tagged_stream_block,
+               gr::block,
+               gr::basic_block,
+               std::shared_ptr<ccsds_encoder>>(m, "ccsds_encoder", D(ccsds_encoder))
 
         .def(py::init(&ccsds_encoder::make),
-           py::arg("itemsize") = 0,
-           py::arg("len_tag_key") = "packet_len",
-           py::arg("rs_encode") = true,
-           py::arg("interleave") = true,
-           py::arg("scramble") = true,
-           py::arg("printing") = false,
-           py::arg("verbose") = false,
-           py::arg("n_interleave") = 5,
-           py::arg("dual_basis") = true,
-           D(ccsds_encoder,make)
-        )
-        
+             py::arg("itemsize") = 0,
+             py::arg("len_tag_key") = "packet_len",
+             py::arg("rs_encode") = true,
+             py::arg("interleave") = true,
+             py::arg("scramble") = true,
+             py::arg("idle") = true,
+             py::arg("idle_block_time") = 50,
+             py::arg("asm_tail") = false,
+             py::arg("printing") = false,
+             py::arg("verbose") = false,
+             D(ccsds_encoder, make))
 
 
+        .def("set_idle",
+             &ccsds_encoder::set_idle,
+             py::arg("idle"),
+             D(ccsds_encoder, set_idle))
 
 
-        
-        .def("num_frames",&ccsds_encoder::num_frames,       
-            D(ccsds_encoder,num_frames)
-        )
+        .def("set_idle_block_time",
+             &ccsds_encoder::set_idle_block_time,
+             py::arg("idle_block_time"),
+             D(ccsds_encoder, set_idle_block_time))
+
+
+        .def("num_frames", &ccsds_encoder::num_frames, D(ccsds_encoder, num_frames))
 
         ;
-
-
-
-
 }
-
-
-
-
-
-
-
-

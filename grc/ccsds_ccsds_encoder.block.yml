@@ -35,10 +35,18 @@ parameters:
     default: 'True'
     options: ['True', 'False']
     option_labels: ['Yes', 'No']
--   id: scramble
-    label: Scramble
-    dtype: enum
+-   id: idle
+    label: Idle Frames
+    dtype: bool
     default: 'True'
+-   id: idle_block_time
+    label: Idle Block Time (ms)
+    dtype: float
+    default: '50'
+-   id: asm_tail
+    label: Add ASM to Tail
+    dtype: enum
+    default: 'False'
     options: ['True', 'False']
     option_labels: ['Yes', 'No']
 -   id: printing
@@ -73,6 +81,8 @@ asserts:
 templates:
     imports: import gnuradio.ccsds as ccsds
     make: ccsds.ccsds_encoder(${type.size}, ${len_tag_key}, ${rs_encode}, ${interleave},
-        ${scramble}, ${printing}, ${verbose}, ${n_interleave}, ${dual_basis})
-
+        ${scramble}, ${idle}, ${idle_block_time}, ${asm_tail}, ${printing}, ${verbose}, ${n_interleave}, ${dual_basis})
+    callbacks:
+        - set_idle(${idle})
+        - set_idle_block_time(${idle_block_time})
 file_format: 1

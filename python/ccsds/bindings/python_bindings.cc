@@ -24,6 +24,7 @@ namespace py = pybind11;
 void bind_ccsds_decoder(py::module& m);
 void bind_ccsds_encoder(py::module& m);
 void bind_correlator(py::module& m);
+void bind_insert_idle_frame(py::module& m);
 // ) END BINDING_FUNCTION_PROTOTYPES
 
 
@@ -55,5 +56,6 @@ PYBIND11_MODULE(ccsds_python, m)
     bind_ccsds_decoder(m);
     bind_ccsds_encoder(m);
     bind_correlator(m);
+    bind_insert_idle_frame(m);
     // ) END BINDING_FUNCTION_CALLS
 }
