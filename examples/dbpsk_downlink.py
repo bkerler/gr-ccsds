@@ -7,7 +7,7 @@
 # GNU Radio Python Flow Graph
 # Title: DBPSK Downlink
 # Author: André Løfaldli
-# GNU Radio version: v3.11.0.0git-55-g8526e6f8
+# GNU Radio version: v3.11.0.0git-201-g5dcccd7e
 
 from packaging.version import Version as StrictVersion
 
@@ -217,8 +217,8 @@ class dbpsk_downlink(gr.top_block, Qt.QWidget):
             1,
             None # parent
         )
-        self.qtgui_freq_sink_x_0.set_update_time(1.0/fps)
-        self.qtgui_freq_sink_x_0.set_y_axis(-140, 10)
+        self.qtgui_freq_sink_x_0.set_update_time((1.0/fps))
+        self.qtgui_freq_sink_x_0.set_y_axis((-140), 10)
         self.qtgui_freq_sink_x_0.set_y_label('Relative Gain', 'dB')
         self.qtgui_freq_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, 0.0, 0, "")
         self.qtgui_freq_sink_x_0.enable_autoscale(False)
@@ -261,9 +261,9 @@ class dbpsk_downlink(gr.top_block, Qt.QWidget):
             1, #number of inputs
             None # parent
         )
-        self.qtgui_const_sink_x_0.set_update_time(1.0/fps)
-        self.qtgui_const_sink_x_0.set_y_axis(-2, 2)
-        self.qtgui_const_sink_x_0.set_x_axis(-2, 2)
+        self.qtgui_const_sink_x_0.set_update_time((1.0/fps))
+        self.qtgui_const_sink_x_0.set_y_axis((-2), 2)
+        self.qtgui_const_sink_x_0.set_x_axis((-2), 2)
         self.qtgui_const_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, "")
         self.qtgui_const_sink_x_0.enable_autoscale(False)
         self.qtgui_const_sink_x_0.enable_grid(False)
@@ -332,10 +332,10 @@ class dbpsk_downlink(gr.top_block, Qt.QWidget):
         _frames_decoded_thread.daemon = True
         _frames_decoded_thread.start()
         self.digital_diff_decoder_bb_0 = digital.diff_decoder_bb(2, digital.DIFF_DIFFERENTIAL)
-        self.digital_costas_loop_cc_0 = digital.costas_loop_cc(6.28/100, 2, False)
+        self.digital_costas_loop_cc_0 = digital.costas_loop_cc((6.28/100), 2, False)
         self.digital_constellation_decoder_cb_0 = digital.constellation_decoder_cb(bpsk)
-        self.digital_clock_recovery_mm_xx_0 = digital.clock_recovery_mm_cc(sps, 0.25*0.175*0.175, 0.5, 0.175, 0.005)
-        self.blocks_moving_average_xx_0 = blocks.moving_average_ff(1000, 1e-3, 4000, 1)
+        self.digital_clock_recovery_mm_xx_0 = digital.clock_recovery_mm_cc(sps, (0.25*0.175*0.175), 0.5, 0.175, 0.005)
+        self.blocks_moving_average_xx_0 = blocks.moving_average_ff(1000, (1e-3), 4000, 1)
         # Create the options list
         self._antenna_options = ['RX2', 'TX/RX']
         # Create the labels list
@@ -353,7 +353,7 @@ class dbpsk_downlink(gr.top_block, Qt.QWidget):
         # Create the radio buttons
         self.top_layout.addWidget(self._antenna_tool_bar)
         self.analog_noise_source_x_0 = analog.noise_source_c(analog.GR_GAUSSIAN, 1, 0)
-        self.analog_agc2_xx_0 = analog.agc2_cc(6e-2, 1e-3, 1, 1)
+        self.analog_agc2_xx_0 = analog.agc2_cc((6e-2), (1e-3), 1, 1)
         self.analog_agc2_xx_0.set_max_gain(65536)
 
 
@@ -456,8 +456,8 @@ class dbpsk_downlink(gr.top_block, Qt.QWidget):
 
     def set_fps(self, fps):
         self.fps = fps
-        self.qtgui_const_sink_x_0.set_update_time(1.0/self.fps)
-        self.qtgui_freq_sink_x_0.set_update_time(1.0/self.fps)
+        self.qtgui_const_sink_x_0.set_update_time((1.0/self.fps))
+        self.qtgui_freq_sink_x_0.set_update_time((1.0/self.fps))
         self.qtgui_number_sink_1.set_update_time(1.0/self.fps)
 
     def get_bpsk(self):
